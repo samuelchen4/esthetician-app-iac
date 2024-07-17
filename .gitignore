@@ -1,0 +1,8 @@
+**/node_modules/
+/modules/lambda/zip/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.env
+*.terraform.lock.hcl
+*/aws-access-key-credentials.png
