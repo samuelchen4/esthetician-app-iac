@@ -21,33 +21,69 @@ exports.handler = async (event) => {
   console.log('DB successfully connected!');
 
   const {
-    title = 'Esthetician',
+    service,
     page = 1,
-    limit = 10,
+    limit = 20,
   } = event.queryStringParameters || event;
   const offset = (page - 1) * limit;
 
+  if (!service) {
+    throw new Error('No service provided!');
+  }
+
   //  query
   const queryText = `
+    WITH filtered_users AS (
+    SELECT 
+        u._id,
+        u.first_name,
+        u.last_name,
+        u.role,
+        u.profile_picture,
+        u.email,
+        u.phone_number,
+        u.username
+    FROM 
+        users u
+    JOIN 
+        user_services us ON u._id = us.user_id
+    JOIN 
+        services s ON us.service_id = s._id
+    WHERE 
+        u.role = $1 AND s.service_name = $2
+    ),
+    all_services AS (
         SELECT 
-          u.*,
-          b.business_id,
-          b.title,
-          b.location,
-          b.cost
-        FROM
-          users AS u
-        LEFT JOIN
-          business AS b
-        ON
-          u.user_id = b.user_id
-        WHERE
-          role = $1 AND b.title = $2
+            u._id,
+            u.first_name,
+            u.last_name,
+            u.role,
+            u.profile_picture,
+            u.email,
+            u.phone_number,
+            u.username,
+            STRING_AGG(
+                s.service_name, ', ' ORDER BY CASE WHEN s.service_name = $2 THEN 0 ELSE 1 END
+            ) AS services
+        FROM 
+            filtered_users u
+        JOIN 
+            user_services us ON u._id = us.user_id
+        JOIN 
+            services s ON us.service_id = s._id
+        GROUP BY 
+            u._id, u.first_name, u.last_name, u.role, u.profile_picture, u.email, u.phone_number, u.username
         LIMIT $3
-        OFFSET $4;
-      `;
+        OFFSET $4
+    )
+    SELECT 
+        a.*
+    FROM 
+        all_services a
+    ;
+  `;
 
-  const values = ['client', title, limit, offset];
+  const values = ['client', service, limit, offset];
   try {
     const result = await pool.query(queryText, values);
 
@@ -55,6 +91,7 @@ exports.handler = async (event) => {
       success: true,
       status: 200,
       message: 'successful query',
+      testing: result,
       data: result.rows,
     };
     return response;

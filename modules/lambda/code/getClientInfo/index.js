@@ -33,19 +33,19 @@ exports.handler = async (event) => {
     const queryText = `
     SELECT
 	u.*,
-	s.*
+	p.*
     FROM
         users as u
     LEFT JOIN
         business as b
     ON
-        u.user_id = b.user_id
+        u._id = b.user_id
     LEFT JOIN
-        services as s
+        products as p
     ON
-        b.business_id = s.business_id
+        u._id = p.user_id
     WHERE
-        u.user_id = $1
+        u._id = $1
     ;
       `;
 
