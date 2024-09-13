@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { deleteServices, postServices, getServices } = require('./submethods');
 
 // connect to client
 const pool = new Pool({
@@ -17,63 +18,51 @@ const pool = new Pool({
 console.log('Initalizing new DB connection');
 
 exports.handler = async (event) => {
-  console.log('Received event:', JSON.stringify(event, null, 2));
-  console.log('DB successfully connected!');
-
-  const {
-    service,
-    page = 1,
-    limit = 20,
-  } = event.queryStringParameters || event;
-  const offset = (page - 1) * limit;
-
-  if (!service) {
-    throw new Error('No service provided!');
-  }
-
-  //  query
-  const queryText = `
-    SELECT
-      u.*,
-      (SELECT ARRAY_AGG(s.service_name ORDER BY CASE WHEN s.service_name = $2 THEN 0 ELSE 1 END)
-      FROM services s
-      WHERE s.user_id = u._id) AS services,
-      (SELECT ARRAY_AGG(sc.day)
-      FROM schedules sc
-      WHERE sc.user_id = u._id) AS schedules
-    FROM users u
-    WHERE u.role = $1
-    AND EXISTS (
-      SELECT 1
-      FROM services s
-      WHERE s.user_id = u._id
-      AND s.service_name = $2
-    )
-    LIMIT $3
-    OFFSET $4
-    ;
-  `;
-
-  const values = ['client', service, limit, offset];
+  const client = await pool.connect();
   try {
-    const result = await pool.query(queryText, values);
+    console.log('AddServicesById method start!');
+    console.log('Received event:', JSON.stringify(event, null, 2));
+    console.log('DB successfully connected!');
+
+    const { userId } = event.pathParameters;
+    const { services } = JSON.parse(event.body);
+
+    if (!userId) {
+      console.error('Missing clerkUserId');
+      throw new Error('Missing clerkUserId');
+    }
+
+    // start transaction
+
+    await client.query('BEGIN');
+
+    // Delete services that ARENT IN the service array;
+    await deleteServices(client, userId, services);
+    // Post services IN the service array
+    await postServices(client, userId, services);
+    // Get all services to return
+    const data = await getServices(client, userId);
+
+    await client.query('COMMIT');
 
     const response = {
       success: true,
       status: 200,
-      message: 'successful query',
-      testing: result,
-      data: result.rows,
+      message: 'Query successful!',
+      data: data,
     };
     return response;
   } catch (err) {
+    await client.query('ROLLBACK');
     const response = {
       success: false,
       status: 500,
       message: err.message,
-      data: [],
+      data: err,
     };
     console.error('Error executing query', response);
     return response;
+  } finally {
+    client.release();
   }
 };

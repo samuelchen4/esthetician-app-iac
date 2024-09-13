@@ -53,27 +53,6 @@ module "getClientCards" {
   }
 }
 
-module "getClientInfo" {
-  source          = "../../modules/lambda/"
-  function_name   = "getClientInfo"
-  handler         = "index.handler"
-  runtime         = "nodejs18.x"
-  timeout         = 300
-  memory_size     = 128
-  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
-  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
-  method_type     = "GET"
-  route_path      = "/api/client-info/{clientId}"
-
-  environment_variables = {
-    DB_USER     = "postgres"
-    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
-    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
-    DB_PORT     = 5432
-    DB_DATABASE = "postgres"
-  }
-}
-
 module "login" {
   source          = "../../modules/lambda/"
   function_name   = "login"
@@ -112,3 +91,346 @@ module "addToWaitlist" {
     REGION     = "us-west-2"
   }
 }
+
+# DESC: grabs user information for a clerk_user_id
+# Route: /api/clerk-users/:clerkUserId
+# Method: GET
+module "getUserByClerkId" {
+  source          = "../../modules/lambda/"
+  function_name   = "getUserByClerkId"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/clerk-users/{clerkUserId}"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DESC: posts user for a new clerk_user_id
+# Route: /api/clerk-users/:clerkUserId
+# Method: POST
+module "postUserByClerkId" {
+  source          = "../../modules/lambda/"
+  function_name   = "postUserByClerkId"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/clerk-users/{clerkUserId}"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+
+# DESC: posts user for a new clerk_user_id
+# Route: /api/clerk-users/:clerkUserId
+# Method: POST
+module "patchRoleById" {
+  source          = "../../modules/lambda/"
+  function_name   = "patchRoleById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "PATCH"
+  route_path      = "/api/users/{userId}/roles"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DESC: Patch first and last name for user by _id
+# Route: /api/users/:userId/names
+# Method: PATCH
+module "patchNameById" {
+  source          = "../../modules/lambda/"
+  function_name   = "patchNameById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "PATCH"
+  route_path      = "/api/users/{userId}/names"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DESC: Patch email for user by _id
+# Route: /api/users/:userId/emails
+# Method: PATCH
+module "patchEmailById" {
+  source          = "../../modules/lambda/"
+  function_name   = "patchEmailById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "PATCH"
+  route_path      = "/api/users/{userId}/emails"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DESC: Patch phone for user by _id
+# Route: /api/users/:userId/phones
+# Method: PATCH
+module "patchPhoneById" {
+  source          = "../../modules/lambda/"
+  function_name   = "patchPhoneById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "PATCH"
+  route_path      = "/api/users/{userId}/phones"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DESC: Patch address for user by _id
+# Route: /api/users/:userId/address
+# Method: PATCH
+module "patchAddressById" {
+  source          = "../../modules/lambda/"
+  function_name   = "patchAddressById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "PATCH"
+  route_path      = "/api/users/{userId}/address"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+# DESC: posts user for a new clerk_user_id
+# Route: /api/clerk-users/:clerkUserId
+# Method: POST
+module "postClientInfoById" {
+  source          = "../../modules/lambda/"
+  function_name   = "postClientInfo"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/users/{userId}/clients"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DELETE getClientCards source code
+
+# getUserInfoById
+# DESC: Gets all fields from users table based on _id
+# Route: /api/users
+# Method: GET
+module "getUserInfoById" {
+  source          = "../../modules/lambda/"
+  function_name   = "getUserInfoById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/users/{userId}"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+# getSchedulesById
+# DESC: Gets all fields for all records from user_schedules table based on user_id
+# Route: /api/users/:userId/schedules
+# Method: GET
+module "getSchedulesByUserId" {
+  source          = "../../modules/lambda/"
+  function_name   = "getSchedulesByUserId"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/users/{userId}/schedules"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+# getPhotosById
+# DESC: Gets all fields for all records from photos table based on user_id
+# Route: /api/users/:userId/photos
+# Method: GET
+module "getPhotosByUserId" {
+  source          = "../../modules/lambda/"
+  function_name   = "getPhotosByUserId"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/users/{userId}/photos"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+# getServicesById
+# DESC: Gets all fields for all records from user_services table based on user_id
+# Route: /api/users/:userId/services
+# Method: GET
+module "getServicesByUserId" {
+  source          = "../../modules/lambda/"
+  function_name   = "getServicesByUserId"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/users/{userId}/services"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# addServicesById
+# DESC: POSTS services for a user_id
+# Route: /api/users/:userId/services
+# Method: POST
+module "addServicesById" {
+  source          = "../../modules/lambda/"
+  function_name   = "addServicesById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/users/{userId}/services"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# addSchedulesById
+# DESC: POSTS schedules for a user_id
+# Route: /api/users/:userId/schedules
+# Method: POST
+module "addSchedulesById" {
+  source          = "../../modules/lambda/"
+  function_name   = "addSchedulesById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/users/{userId}/schedules"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+
