@@ -168,6 +168,30 @@ module "patchRoleById" {
 # DESC: Patch first and last name for user by _id
 # Route: /api/users/:userId/names
 # Method: PATCH
+module "patchBasicUserInfoById" {
+  source          = "../../modules/lambda/"
+  function_name   = "patchBasicUserInfoById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "PATCH"
+  route_path      = "/api/users/{userId}/basic"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# DESC: Patch first and last name for user by _id
+# Route: /api/users/:userId/names
+# Method: PATCH
 module "patchNameById" {
   source          = "../../modules/lambda/"
   function_name   = "patchNameById"
@@ -398,6 +422,75 @@ module "addServicesById" {
   api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
   method_type     = "POST"
   route_path      = "/api/users/{userId}/services"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# generatePresignedUrls
+# DESC: generates presigned urls for S3
+# Route: /api/users/:userId/photos/presigned-urls
+# Method: POST
+module "generatePresignedUrls" {
+  source          = "../../modules/lambda/"
+  function_name   = "generatePresignedUrls"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/users/{userId}/photos/presigned-urls"
+
+  environment_variables = {
+    REGION      = "us-west-2"
+    BUCKET_NAME = "beauty-connect-user-portfolio-photos"
+  }
+}
+
+# generatePresignedUrls
+# DESC: generates presigned urls for S3
+# Route: /api/users/:userId/photos/presigned-urls
+# Method: POST
+module "getPhotoByPresignedUrl" {
+  source          = "../../modules/lambda/"
+  function_name   = "getPhotoByPresignedUrl"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/photos/keys"
+
+  environment_variables = {
+    REGION      = "us-west-2"
+    BUCKET_NAME = "beauty-connect-user-portfolio-photos"
+  }
+}
+
+# addPhotosById
+# DESC: POSTS photos for a user_id
+# Route: /api/users/:userId/photos
+# Method: POST
+module "addPhotosById" {
+  source          = "../../modules/lambda/"
+  function_name   = "addPhotosById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/users/{userId}/photos"
 
   environment_variables = {
     DB_USER     = "postgres"
