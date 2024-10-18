@@ -18,7 +18,7 @@ console.log('Initalizing new DB connection');
 
 exports.handler = async (event) => {
   console.log('Received event:', JSON.stringify(event, null, 2));
-  console.log('Calling getAetheticians method');
+  console.log('Calling getTrendingAetheticians method');
 
   //   Props
   // Required:
@@ -40,14 +40,13 @@ exports.handler = async (event) => {
     long,
     city,
     province,
-    service,
     page = 1,
     limit = 10,
   } = event.queryStringParameters || event;
   const offset = (page - 1) * limit;
 
   // 1) Return error if any required props are missing
-  if (!lat || !long || !city || !province || !service) {
+  if (!lat || !long || !city || !province) {
     throw new Error('Some required params missing!');
   }
 
@@ -56,12 +55,12 @@ exports.handler = async (event) => {
     SELECT
         u.*,
         (
-            SELECT ARRAY_AGG(s.service_name ORDER BY CASE WHEN s.service_name = $1 THEN 0 ELSE 1 END)
+            SELECT ARRAY_AGG(s.service_name ORDER BY s.service_name)
             FROM services s
             WHERE s.user_id = u._id
         ) AS services,
         (
-            SELECT ARRAY_AGG(COALESCE(p.image_url_local, p.image_url))  -- Use image_url_local if not NULL, otherwise image_url
+            SELECT ARRAY_AGG(COALESCE(p.image_url_local, p.image_url))
             FROM photos p
             WHERE p.user_id = u._id
         ) AS photos
@@ -70,13 +69,13 @@ exports.handler = async (event) => {
         SELECT 1
         FROM services s
         WHERE s.user_id = u._id
-        AND s.service_name = $1
     )
-    LIMIT $2
-    OFFSET $3;
+    ORDER BY u.rating DESC
+    LIMIT $1
+    OFFSET $2;
   `;
 
-  const values = [service, limit, offset];
+  const values = [limit, offset];
   try {
     const result = await pool.query(query, values);
     // Procedure to calculate the distances from user
@@ -123,7 +122,7 @@ exports.handler = async (event) => {
     };
     return response;
   } catch (err) {
-    console.error('Error in getAetheticians lambda', err.message);
+    console.error('Error in getTrendingAetheticians lambda', err.message);
     const response = {
       success: false,
       status: 500,

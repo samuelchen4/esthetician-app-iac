@@ -27,6 +27,6 @@ module "api_gateway" {
   source         = "../../modules/gateway"
   allow_headers  = ["*"]
   allow_methods  = ["*"]
-  allow_origins  = ["https://main.d3jm5wfa9rhc6f.amplifyapp.com", "http://localhost:3000", "https://main.d28sxseyh583wn.amplifyapp.com", "http://localhost:4321", "https://beautyconnection.ca", "https://lander.beautyconnection.ca"]
+  allow_origins  = ["https://main.d3jm5wfa9rhc6f.amplifyapp.com", "http://localhost:3000", "http://localhost:3001", "http://192.168.1.79:3001", "https://main.d28sxseyh583wn.amplifyapp.com", "http://localhost:4321", "https://beautyconnection.ca", "https://lander.beautyconnection.ca"]
   expose_headers = ["*"]
 }

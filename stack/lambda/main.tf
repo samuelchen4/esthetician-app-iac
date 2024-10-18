@@ -526,4 +526,155 @@ module "addSchedulesById" {
   }
 }
 
+# getAetheticians
+# DESC: Gets aetheticians based on service
+# Route: /api/aetheticians
+# Method: GET
+module "getAetheticians" {
+  source          = "../../modules/lambda/"
+  function_name   = "getAetheticians"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/aetheticians"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+
+# getTrendingAetheticians
+# DESC: Gets aetheticians based on service
+# Route: /api/aetheticians/trending
+# Method: GET
+module "getTrendingAetheticians" {
+  source          = "../../modules/lambda/"
+  function_name   = "getTrendingAetheticians"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/aetheticians/trending"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# getClosestAetheticians
+# DESC: Gets aetheticians based on service
+# Route: /api/aetheticians/trending
+# Method: GET
+module "getClosestAetheticians" {
+  source          = "../../modules/lambda/"
+  function_name   = "getClosestAetheticians"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/aetheticians/nearby"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# postLike
+# DESC: posts a like for a user
+# Route: /api/likes
+# Method: POST
+module "postLike" {
+  source          = "../../modules/lambda/"
+  function_name   = "postLike"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "POST"
+  route_path      = "/api/likes"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# deleteLike
+# DESC: deletes a like for a user
+# Route: /api/likes
+# Method: DELETE
+module "deleteLike" {
+  source          = "../../modules/lambda/"
+  function_name   = "deleteLike"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "DELETE"
+  route_path      = "/api/likes"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# getLikes
+# DESC: gets all likes for a user
+# Route: /api/likes
+# Method: GET
+module "getLikes" {
+  source          = "../../modules/lambda/"
+  function_name   = "getLikes"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/likes"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
 

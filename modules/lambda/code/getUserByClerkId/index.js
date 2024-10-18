@@ -49,7 +49,7 @@ exports.handler = async (event) => {
     const response = {
       success: true,
       status: 200,
-      message: 'No values returned!',
+      message: 'User returned!',
       data: data,
     };
     return response;
