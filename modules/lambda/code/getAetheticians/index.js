@@ -36,8 +36,8 @@ exports.handler = async (event) => {
 
   //   Destructure properties
   const {
-    lat,
-    long,
+    lat = 51.0501,
+    long = -114.0853,
     city,
     province,
     service,
@@ -71,7 +71,8 @@ exports.handler = async (event) => {
         FROM services s
         WHERE s.user_id = u._id
         AND s.service_name = $1
-    )
+    ) AND
+      u.active = TRUE
     LIMIT $2
     OFFSET $3;
   `;

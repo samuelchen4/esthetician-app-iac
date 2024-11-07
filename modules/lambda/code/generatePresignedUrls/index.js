@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     const { userId } = event.pathParameters;
-    const { photos } = JSON.parse(event.body);
+    const { keys } = JSON.parse(event.body);
 
     if (!userId) {
       console.error('Missing userId');
@@ -20,25 +20,17 @@ exports.handler = async (event) => {
     }
 
     const urls = await Promise.all(
-      photos.map(async (photo) => {
-        const { imageId, url: browserUrl, fileType } = photo;
-        const key = `users/${userId}/photos/${imageId}`;
+      keys.map(async (key) => {
         const params = {
           Bucket: bucketName,
           Key: key,
-          ContentType: fileType,
         };
 
         const command = new PutObjectCommand(params);
 
         const uploadURL = await getSignedUrl(s3, command, { expiresIn: 60 });
 
-        return {
-          imageId,
-          browserUrl,
-          uploadURL,
-          contentType: fileType,
-        };
+        return uploadURL;
       })
     );
 

@@ -382,6 +382,7 @@ module "getPhotosByUserId" {
     DB_DATABASE = "postgres"
   }
 }
+
 # getServicesById
 # DESC: Gets all fields for all records from user_services table based on user_id
 # Route: /api/users/:userId/services
@@ -467,8 +468,9 @@ module "getPhotoByPresignedUrl" {
   memory_size     = 128
   api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
   api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
-  method_type     = "GET"
-  route_path      = "/api/photos/keys"
+  method_type     = "POST"
+  # route_path      = "/api/users/{userId}/photos/keys"
+  route_path = "/api/photos/keys"
 
   environment_variables = {
     REGION      = "us-west-2"
@@ -667,6 +669,56 @@ module "getLikes" {
   api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
   method_type     = "GET"
   route_path      = "/api/likes"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# getLikes
+# DESC: gets all likes for a user
+# Route: /api/products/users/:userId
+# Method: GET
+module "getProductsById" {
+  source          = "../../modules/lambda/"
+  function_name   = "getProductsById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/products/users/{userId}"
+
+  environment_variables = {
+    DB_USER     = "postgres"
+    DB_PASSWORD = "!Qu5k3G0Z$})~Z##XzYaUROyOXk]"
+    DB_HOST     = "esthetician-app-db.cvlzcxvilm37.us-west-2.rds.amazonaws.com"
+    DB_PORT     = 5432
+    DB_DATABASE = "postgres"
+  }
+}
+
+# getLikes
+# DESC: gets all likes for a user
+# Route: /api/reviews/users/userId
+# Method: GET
+module "getReviewsById" {
+  source          = "../../modules/lambda/"
+  function_name   = "getReviewsById"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 128
+  api_gateway_arn = data.terraform_remote_state.api_gateway.outputs.api_gateway_arn
+  api_gateway_id  = data.terraform_remote_state.api_gateway.outputs.api_gateway_id
+  method_type     = "GET"
+  route_path      = "/api/reviews/users/{userId}"
 
   environment_variables = {
     DB_USER     = "postgres"
